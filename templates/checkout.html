@@ -1,0 +1,61 @@
+{% extends "base.html" %}
+{% block title %}Checkout — Markaz{% endblock %}
+
+{% block content %}
+<div class="container py-4">
+    <h2 class="fw-bold mb-4">Checkout</h2>
+    <div class="row g-4">
+        <div class="col-lg-7">
+            <div class="bg-white rounded-4 p-4 shadow-sm">
+                <h5 class="fw-bold mb-3">Shipping Details</h5>
+                <form method="post">
+                    <div class="mb-3">
+                        <label class="form-label">Full Name</label>
+                        <input type="text" class="form-control" value="{{ current_user.name }}" required>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Phone *</label>
+                        <input type="text" name="phone" class="form-control" value="{{ current_user.phone or '' }}"
+                            required placeholder="03XX-XXXXXXX">
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">City</label>
+                        <input type="text" name="city" class="form-control" placeholder="Lahore, Karachi, Islamabad...">
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Full Address *</label>
+                        <textarea name="address" class="form-control" rows="3" required
+                            placeholder="House #, Street, Area..."></textarea>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Order Notes (optional)</label>
+                        <textarea name="notes" class="form-control" rows="2"></textarea>
+                    </div>
+                    <div class="alert alert-info py-2">
+                        <i class="fas fa-money-bill-wave me-1"></i> Payment Method: <strong>Cash on Delivery</strong>
+                    </div>
+                    <button type="submit" class="btn btn-lg rounded-pill px-5 btn-primary-custom">
+                        Place Order — Rs. {{ "{:,}".format(total) }}
+                    </button>
+                </form>
+            </div>
+        </div>
+        <div class="col-lg-5">
+            <div class="bg-white rounded-4 p-4 shadow-sm">
+                <h5 class="fw-bold mb-3">Order Summary</h5>
+                {% for item in items %}
+                <div class="d-flex justify-content-between mb-2 small">
+                    <span>{{ item.product.name[:30] }} × {{ item.quantity }}</span>
+                    <span>Rs. {{ "{:,}".format(item.subtotal()) }}</span>
+                </div>
+                {% endfor %}
+                <hr>
+                <div class="d-flex justify-content-between fw-bold">
+                    <span>Total</span>
+                    <span>Rs. {{ "{:,}".format(total) }}</span>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

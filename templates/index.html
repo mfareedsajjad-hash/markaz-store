@@ -1,0 +1,205 @@
+{% extends "base.html" %}
+{% block title %}Markaz — Thousands of products, best prices{% endblock %}
+
+{% block content %}
+<div class="container py-4">
+
+    <!-- Hero -->
+    <div class="row g-3 mb-4">
+        <div class="col-lg-8">
+            <div class="hero-banner">
+                <div class="content">
+                    <h1>Thousands of products,<br>best prices.</h1>
+                    <p class="opacity-90">Shop from Pakistan & China • Cash on Delivery • 7-day Returns</p>
+                    <a href="#featured" class="btn-hero">Shop Now <i class="fas fa-arrow-right ms-1"></i></a>
+                </div>
+            </div>
+        </div>
+        <div class="col-lg-4">
+            <div class="row g-3 h-100">
+                <div class="col-6 col-lg-12">
+                    <div class="promo-banner promo-dark h-100 d-flex flex-column justify-content-center" style="min-height:120px;">
+                        <div class="fw-bold fs-5">Shop from Pakistan</div>
+                        <small class="opacity-75">Trusted local sellers</small>
+                    </div>
+                </div>
+                <div class="col-6 col-lg-12">
+                    <div class="promo-banner h-100 d-flex flex-column justify-content-center" style="background:linear-gradient(135deg,#DC2626,#B91C1C);color:#fff;min-height:120px;">
+                        <div class="fw-bold fs-5">Shop from China</div>
+                        <small class="opacity-75">Factory direct prices</small>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Categories -->
+    <div class="mb-5">
+        <div class="section-title">Shop by Category</div>
+        <div class="row g-2 justify-content-center">
+            {% for c in categories %}
+            <div class="col-3 col-md-2 col-lg-1 text-center">
+                <a href="{{ url_for('category_page', category_id=c.id) }}">
+                    <div class="cat-circle">{{ c.icon }}</div>
+                    <div class="cat-name">{{ c.name }}</div>
+                </a>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+
+    <!-- Occasions -->
+    <div class="mb-5">
+        <div class="section-title">Shop by Occasion</div>
+        <div class="row g-3">
+            {% for occ in occasions %}
+            <div class="col-6 col-md-3">
+                <div class="occasion-card" style="background-image:url('{{ occ.image }}');">
+                    <span>{{ occ.name }}</span>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+
+    <!-- Promo row -->
+    <div class="row g-3 mb-5">
+        <div class="col-md-6">
+            <div class="promo-banner promo-pink">
+                <h4 class="fw-bold mb-1">Unstitched, unmatched.</h4>
+                <p class="mb-2 opacity-75">Premium lawn & embroidery collections</p>
+                <a href="{{ url_for('category_page', category_id=2) }}" class="btn btn-sm btn-dark rounded-pill px-3">Shop Fashion</a>
+            </div>
+        </div>
+        <div class="col-md-6">
+            <div class="promo-banner promo-orange">
+                <h4 class="fw-bold mb-1">Factory direct from China</h4>
+                <p class="mb-2 opacity-75">Best prices • Freight handled</p>
+                <a href="#" class="btn btn-sm btn-dark rounded-pill px-3">Explore China</a>
+            </div>
+        </div>
+    </div>
+
+    <!-- Featured -->
+    {% if featured %}
+    <div class="mb-5" id="featured">
+        <div class="section-title"><i class="fas fa-fire text-danger"></i> Markaz Featured - Sale</div>
+        <div class="row g-3">
+            {% for p in featured %}
+            <div class="col-6 col-md-4 col-lg-2-4" style="flex:0 0 20%;max-width:20%;">
+                {% include 'partials/product_card.html' %}
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+    {% endif %}
+
+    <!-- Latest -->
+    {% if latest %}
+    <div class="mb-5">
+        <div class="section-title">Latest Products</div>
+        <div class="row g-3">
+            {% for p in latest %}
+            <div class="col-6 col-md-3 col-lg-3">
+                {% include 'partials/product_card.html' %}
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+    {% endif %}
+
+    <!-- Pink banner -->
+    <div class="promo-banner promo-pink mb-5 text-center py-4">
+        <h3 class="fw-bold mb-1">The looks everyone's reaching for</h3>
+        <p class="mb-3 opacity-75">Discover trending styles</p>
+        <a href="{{ url_for('category_page', category_id=2) }}" class="btn btn-dark rounded-pill px-4">Explore Fashion</a>
+    </div>
+
+    <!-- Trending -->
+    {% if trending %}
+    <div class="mb-5">
+        <div class="section-title"><i class="fas fa-chart-line text-primary"></i> Trending Products</div>
+        <div class="row g-3">
+            {% for p in trending %}
+            <div class="col-6 col-md-4 col-lg-2">
+                {% include 'partials/product_card.html' %}
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+    {% endif %}
+
+    <!-- Deals -->
+    {% if deals %}
+    <div class="mb-5">
+        <div class="section-title"><i class="fas fa-tags text-danger"></i> Best Deals For You</div>
+        <div class="row g-3">
+            {% for p in deals %}
+            <div class="col-6 col-md-4 col-lg-2">
+                {% include 'partials/product_card.html' %}
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+    {% endif %}
+
+    <!-- Books -->
+    {% if bestsellers %}
+    <div class="mb-5">
+        <div class="section-title"><i class="fas fa-book-open text-success"></i> Bestselling Books</div>
+        <div class="row g-3">
+            {% for p in bestsellers %}
+            <div class="col-6 col-md-3">
+                {% include 'partials/product_card.html' %}
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+    {% endif %}
+
+    <!-- New -->
+    {% if new_products %}
+    <div class="mb-5">
+        <div class="section-title"><i class="fas fa-sparkles text-warning"></i> New Products</div>
+        <div class="row g-3">
+            {% for p in new_products %}
+            <div class="col-6 col-md-4 col-lg-2">
+                {% include 'partials/product_card.html' %}
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+    {% endif %}
+
+    <!-- All products -->
+    {% if all_products %}
+    <div class="mb-5">
+        <div class="section-title">We Think You Might Like!</div>
+        <div class="row g-3">
+            {% for p in all_products %}
+            <div class="col-6 col-md-4 col-lg-2">
+                {% include 'partials/product_card.html' %}
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+    {% endif %}
+
+    <!-- Trust -->
+    <div class="text-center py-5 mb-3" style="background:linear-gradient(135deg,#0F172A,#1E293B);border-radius:20px;color:#fff;">
+        <h2 class="fw-bold mb-2">Built for Pakistan. Trusted nationwide.</h2>
+        <p class="opacity-75 mb-4">Cash on Delivery • 7-day Returns • Buyer Protection</p>
+        <div class="d-flex flex-wrap justify-content-center gap-2">
+            <span class="badge bg-white text-dark px-3 py-2 rounded-pill">Cash on Delivery</span>
+            <span class="badge bg-white text-dark px-3 py-2 rounded-pill">Fast Shipping</span>
+            <span class="badge bg-white text-dark px-3 py-2 rounded-pill">Easy Returns</span>
+            <span class="badge bg-white text-dark px-3 py-2 rounded-pill">Secure</span>
+        </div>
+    </div>
+</div>
+
+<style>
+@media (min-width:992px){ .col-lg-2-4{flex:0 0 20%;max-width:20%;} }
+@media (max-width:991px){ .col-lg-2-4{flex:0 0 50%;max-width:50%;} }
+</style>
+{% endblock %}

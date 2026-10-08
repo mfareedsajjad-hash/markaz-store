@@ -1,0 +1,33 @@
+<a href="{{ url_for('product_detail', product_id=p.id) }}">
+    <div class="product-card">
+        <div class="product-img-wrap">
+            {% if p.badge %}
+            <span class="badge-custom
+                {% if p.badge == 'Sale' %}badge-sale
+                {% elif p.badge == 'Hot' %}badge-hot
+                {% elif p.badge == 'New' %}badge-new
+                {% elif p.badge == 'Deal' %}badge-deal
+                {% elif p.badge in ['Trending','Popular'] %}badge-trending
+                {% elif p.badge in ['Premium','Luxury'] %}badge-premium
+                {% elif p.badge in ['Bestseller','Best Seller'] %}badge-bestseller
+                {% else %}badge-deal{% endif %}">{{ p.badge }}</span>
+            {% endif %}
+            <img src="{{ p.image or 'https://via.placeholder.com/300' }}" alt="{{ p.name }}" loading="lazy">
+        </div>
+        <div class="product-body">
+            <div class="product-name">{{ p.name }}</div>
+            <div>
+                <span class="price">Rs. {{ "{:,}".format(p.price) }}</span>
+                {% if p.old_price %}<span class="old-price">Rs. {{ "{:,}".format(p.old_price) }}</span>{% endif %}
+            </div>
+            <div class="rating">
+                {% for i in range(5) %}
+                    {% if i < p.rating|int %}<i class="fas fa-star"></i>
+                    {% elif i < p.rating %}<i class="fas fa-star-half-alt"></i>
+                    {% else %}<i class="far fa-star"></i>{% endif %}
+                {% endfor %}
+                <span class="text-muted ms-1">({{ p.rating }})</span>
+            </div>
+        </div>
+    </div>
+</a>

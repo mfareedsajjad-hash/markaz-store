@@ -1,0 +1,241 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}Markaz — Online Shopping Pakistan{% endblock %}</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary: #0F766E;
+            --primary-dark: #0D5C56;
+            --accent: #F59E0B;
+            --bg: #F8FAFC;
+            --card-shadow: 0 1px 3px rgba(0,0,0,.08);
+            --card-hover: 0 12px 28px -8px rgba(0,0,0,.15);
+        }
+        * { box-sizing: border-box; }
+        body { font-family: 'Inter', system-ui, sans-serif; background: var(--bg); color: #1E293B; margin: 0; }
+        a { text-decoration: none; color: inherit; }
+
+        /* Top bar */
+        .top-bar { background: #0F172A; color: #94A3B8; font-size: 13px; padding: 7px 0; }
+        .top-bar a { color: #CBD5E1; }
+        .top-bar a:hover { color: #fff; }
+
+        /* Navbar */
+        .navbar-main { background: #fff; box-shadow: var(--card-shadow); position: sticky; top: 0; z-index: 1000; }
+        .logo { font-weight: 800; font-size: 1.55rem; color: var(--primary); letter-spacing: -0.5px; }
+        .logo span { color: var(--accent); }
+        .search-box { background: #F1F5F9; border-radius: 50px; border: 1px solid #E2E8F0; overflow: hidden; display: flex; }
+        .search-box input { border: none; background: transparent; padding: 10px 18px; outline: none; flex: 1; font-size: 14px; }
+        .search-box button { background: var(--primary); color: #fff; border: none; padding: 10px 20px; border-radius: 50px; margin: 3px; cursor: pointer; }
+        .nav-icon { font-size: 1.2rem; color: #475569; position: relative; padding: 6px; }
+        .nav-icon:hover { color: var(--primary); }
+        .cart-badge { position: absolute; top: -4px; right: -6px; background: #EF4444; color: #fff; font-size: 10px; width: 17px; height: 17px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: 700; }
+
+        /* Hero */
+        .hero-banner { background: linear-gradient(135deg, #0F766E, #134E4A); border-radius: 16px; min-height: 280px; color: #fff; position: relative; overflow: hidden; }
+        .hero-banner .content { padding: 40px; position: relative; z-index: 2; }
+        .hero-banner h1 { font-weight: 800; font-size: 2.1rem; line-height: 1.2; margin-bottom: 10px; }
+        .btn-hero { background: #fff; color: var(--primary); font-weight: 600; padding: 11px 26px; border-radius: 50px; display: inline-block; margin-top: 14px; }
+        .btn-hero:hover { background: #F1F5F9; color: var(--primary-dark); }
+
+        /* Categories */
+        .cat-circle { width: 68px; height: 68px; border-radius: 50%; background: #fff; display: flex; align-items: center; justify-content: center; font-size: 1.7rem; box-shadow: var(--card-shadow); transition: .2s; margin: 0 auto 6px; }
+        .cat-circle:hover { transform: translateY(-4px); box-shadow: var(--card-hover); }
+        .cat-name { font-size: 12px; font-weight: 500; text-align: center; color: #475569; }
+
+        /* Section */
+        .section-title { font-weight: 700; font-size: 1.3rem; color: #0F172A; margin-bottom: 16px; display: flex; align-items: center; gap: 8px; }
+        .section-title .view-all { margin-left: auto; font-size: .88rem; font-weight: 500; color: var(--primary); }
+
+        /* Product Card */
+        .product-card { background: #fff; border-radius: 14px; overflow: hidden; box-shadow: var(--card-shadow); transition: .25s; height: 100%; border: 1px solid #F1F5F9; }
+        .product-card:hover { transform: translateY(-5px); box-shadow: var(--card-hover); }
+        .product-img-wrap { position: relative; padding-top: 100%; background: #F8FAFC; overflow: hidden; }
+        .product-img-wrap img { position: absolute; top: 0; left: 0; width: 100%; height: 100%; object-fit: cover; transition: transform .4s; }
+        .product-card:hover .product-img-wrap img { transform: scale(1.05); }
+        .badge-custom { position: absolute; top: 10px; left: 10px; font-size: 11px; font-weight: 600; padding: 3px 10px; border-radius: 20px; z-index: 2; }
+        .badge-sale { background: #FEE2E2; color: #DC2626; }
+        .badge-hot { background: #FEF3C7; color: #D97706; }
+        .badge-new { background: #D1FAE5; color: #059669; }
+        .badge-deal { background: #DBEAFE; color: #2563EB; }
+        .badge-trending { background: #FCE7F3; color: #DB2777; }
+        .badge-premium { background: #EDE9FE; color: #7C3AED; }
+        .badge-bestseller { background: #FEF3C7; color: #B45309; }
+        .product-body { padding: 12px 14px 14px; }
+        .product-name { font-size: 13.5px; font-weight: 500; color: #334155; line-height: 1.35; height: 36px; overflow: hidden; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; margin-bottom: 6px; }
+        .price { font-weight: 700; font-size: 15px; color: #0F172A; }
+        .old-price { font-size: 12.5px; color: #94A3B8; text-decoration: line-through; margin-left: 6px; }
+        .rating { font-size: 12px; color: #F59E0B; margin-top: 3px; }
+
+        /* Occasion */
+        .occasion-card { border-radius: 14px; overflow: hidden; height: 150px; position: relative; background-size: cover; background-position: center; }
+        .occasion-card::after { content: ''; position: absolute; inset: 0; background: linear-gradient(to top, rgba(0,0,0,.6), transparent 55%); }
+        .occasion-card span { position: absolute; bottom: 14px; left: 14px; color: #fff; font-weight: 600; font-size: 1rem; z-index: 2; }
+
+        /* Promo */
+        .promo-banner { border-radius: 14px; padding: 26px 28px; }
+        .promo-dark { background: linear-gradient(135deg, #1E293B, #0F172A); color: #fff; }
+        .promo-pink { background: linear-gradient(135deg, #FDF2F8, #FCE7F3); color: #831843; }
+        .promo-orange { background: linear-gradient(135deg, #FFF7ED, #FFEDD5); color: #9A3412; }
+
+        /* Buttons */
+        .btn-primary-custom { background: var(--primary); color: #fff; border: none; }
+        .btn-primary-custom:hover { background: var(--primary-dark); color: #fff; }
+
+        /* Footer */
+        footer { background: #0F172A; color: #94A3B8; padding-top: 48px; margin-top: 50px; }
+        footer h6 { color: #fff; font-weight: 600; margin-bottom: 14px; font-size: .92rem; }
+        footer a { color: #94A3B8; font-size: .85rem; display: block; margin-bottom: 7px; }
+        footer a:hover { color: #fff; }
+        .footer-bottom { border-top: 1px solid #1E293B; padding: 18px 0; margin-top: 30px; font-size: .84rem; }
+
+        /* Auth cards */
+        .auth-card { max-width: 420px; margin: 40px auto; background: #fff; border-radius: 16px; padding: 32px; box-shadow: var(--card-shadow); }
+
+        /* Admin */
+        .admin-sidebar { background: #0F172A; min-height: 100vh; color: #94A3B8; padding: 20px 0; }
+        .admin-sidebar a { color: #94A3B8; display: block; padding: 10px 20px; font-size: 14px; }
+        .admin-sidebar a:hover, .admin-sidebar a.active { color: #fff; background: #1E293B; }
+        .stat-card { background: #fff; border-radius: 12px; padding: 20px; box-shadow: var(--card-shadow); }
+
+        @media (max-width: 768px) {
+            .hero-banner h1 { font-size: 1.5rem; }
+            .hero-banner .content { padding: 24px; }
+            .cat-circle { width: 58px; height: 58px; font-size: 1.4rem; }
+        }
+    </style>
+    {% block extra_css %}{% endblock %}
+</head>
+<body>
+    <!-- Top Bar -->
+    <div class="top-bar">
+        <div class="container d-flex justify-content-between align-items-center">
+            <div><i class="fas fa-truck me-1"></i> Free Delivery on orders over Rs. 2,000</div>
+            <div class="d-none d-md-flex gap-3">
+                <a href="#">Become a Reseller</a>
+                <a href="#">Download App</a>
+                <a href="#">Help</a>
+            </div>
+        </div>
+    </div>
+
+    <!-- Navbar -->
+    <nav class="navbar-main py-2">
+        <div class="container">
+            <div class="d-flex align-items-center gap-3">
+                <a href="{{ url_for('home') }}" class="logo">Markaz<span>.</span></a>
+
+                <form action="{{ url_for('search') }}" method="get" class="search-box flex-grow-1 d-none d-md-flex">
+                    <input type="text" name="q" placeholder="Search products, brands..." value="{{ request.args.get('q', '') }}">
+                    <button type="submit"><i class="fas fa-search"></i></button>
+                </form>
+
+                <div class="d-flex align-items-center gap-2 ms-auto">
+                    {% if current_user.is_authenticated %}
+                        {% if current_user.is_admin %}
+                        <a href="{{ url_for('admin_dashboard') }}" class="nav-icon" title="Admin"><i class="fas fa-cog"></i></a>
+                        {% endif %}
+                        <a href="{{ url_for('my_orders') }}" class="nav-icon" title="My Orders"><i class="fas fa-box"></i></a>
+                        <a href="{{ url_for('cart') }}" class="nav-icon" title="Cart">
+                            <i class="fas fa-shopping-bag"></i>
+                            {% if cart_count > 0 %}<span class="cart-badge">{{ cart_count }}</span>{% endif %}
+                        </a>
+                        <div class="dropdown">
+                            <a class="nav-icon" href="#" data-bs-toggle="dropdown"><i class="far fa-user"></i></a>
+                            <ul class="dropdown-menu dropdown-menu-end">
+                                <li><span class="dropdown-item-text small text-muted">{{ current_user.name }}</span></li>
+                                <li><hr class="dropdown-divider"></li>
+                                <li><a class="dropdown-item" href="{{ url_for('my_orders') }}">My Orders</a></li>
+                                <li><a class="dropdown-item" href="{{ url_for('cart') }}">Cart</a></li>
+                                {% if current_user.is_admin %}
+                                <li><a class="dropdown-item" href="{{ url_for('admin_dashboard') }}">Admin Panel</a></li>
+                                {% endif %}
+                                <li><hr class="dropdown-divider"></li>
+                                <li><a class="dropdown-item text-danger" href="{{ url_for('logout') }}">Logout</a></li>
+                            </ul>
+                        </div>
+                    {% else %}
+                        <a href="{{ url_for('login') }}" class="nav-icon" title="Login"><i class="far fa-user"></i></a>
+                        <a href="{{ url_for('cart') }}" class="nav-icon" title="Cart"><i class="fas fa-shopping-bag"></i></a>
+                    {% endif %}
+                </div>
+            </div>
+            <!-- Mobile search -->
+            <form action="{{ url_for('search') }}" method="get" class="search-box d-flex d-md-none mt-2">
+                <input type="text" name="q" placeholder="Search products..." value="{{ request.args.get('q', '') }}">
+                <button type="submit"><i class="fas fa-search"></i></button>
+            </form>
+        </div>
+    </nav>
+
+    <!-- Flash -->
+    {% with messages = get_flashed_messages(with_categories=true) %}
+    {% if messages %}
+    <div class="container mt-3">
+        {% for cat, msg in messages %}
+        <div class="alert alert-{{ cat }} alert-dismissible fade show py-2" role="alert">
+            {{ msg }}
+            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+        </div>
+        {% endfor %}
+    </div>
+    {% endif %}
+    {% endwith %}
+
+    {% block content %}{% endblock %}
+
+    <!-- Footer -->
+    <footer>
+        <div class="container">
+            <div class="row g-4">
+                <div class="col-6 col-md-3">
+                    <h6>Shop Markaz</h6>
+                    {% for c in categories[:6] %}
+                    <a href="{{ url_for('category_page', category_id=c.id) }}">{{ c.name }}</a>
+                    {% endfor %}
+                </div>
+                <div class="col-6 col-md-3">
+                    <h6>Customer Care</h6>
+                    <a href="#">Help Center</a>
+                    <a href="#">How to Order</a>
+                    <a href="#">Shipping & Delivery</a>
+                    <a href="#">Returns & Refunds</a>
+                    <a href="#">Track Order</a>
+                </div>
+                <div class="col-6 col-md-3">
+                    <h6>About Markaz</h6>
+                    <a href="#">About Us</a>
+                    <a href="#">Careers</a>
+                    <a href="#">Press</a>
+                    <a href="#">Blog</a>
+                    <a href="#">Contact</a>
+                </div>
+                <div class="col-6 col-md-3">
+                    <h6>Earn with Markaz</h6>
+                    <a href="#">Become a Reseller</a>
+                    <a href="#">Dropshipping</a>
+                    <a href="#">Affiliate Program</a>
+                    <a href="#">Seller Center</a>
+                </div>
+            </div>
+            <div class="footer-bottom d-flex flex-column flex-md-row justify-content-between align-items-center gap-2">
+                <div>© {{ year }} Markaz. Built for Pakistan. All rights reserved.</div>
+                <div class="d-flex gap-3">
+                    <a href="#"><i class="fab fa-facebook-f"></i></a>
+                    <a href="#"><i class="fab fa-instagram"></i></a>
+                    <a href="#"><i class="fab fa-twitter"></i></a>
+                    <a href="#"><i class="fab fa-youtube"></i></a>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+    {% block extra_js %}{% endblock %}
+</body>
+</html>

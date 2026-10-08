@@ -1,0 +1,56 @@
+{% extends "base.html" %}
+{% block title %}Order #{{ order.id }} — Markaz{% endblock %}
+
+{% block content %}
+<div class="container py-4">
+    <nav aria-label="breadcrumb" class="mb-3">
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item"><a href="{{ url_for('my_orders') }}">My Orders</a></li>
+            <li class="breadcrumb-item active">Order #{{ order.id }}</li>
+        </ol>
+    </nav>
+
+    <div class="row g-4">
+        <div class="col-lg-8">
+            <div class="bg-white rounded-4 p-4 shadow-sm mb-3">
+                <div class="d-flex justify-content-between align-items-center mb-3">
+                    <h4 class="fw-bold mb-0">Order #{{ order.id }}</h4>
+                    <span class="badge fs-6
+                        {% if order.status == 'Pending' %}bg-warning text-dark
+                        {% elif order.status == 'Confirmed' %}bg-info
+                        {% elif order.status == 'Shipped' %}bg-primary
+                        {% elif order.status == 'Delivered' %}bg-success
+                        {% else %}bg-secondary{% endif %}">{{ order.status }}</span>
+                </div>
+                <p class="text-muted small mb-3">Placed on {{ order.created_at.strftime('%d %B %Y, %I:%M %p') }}</p>
+
+                {% for item in order.items %}
+                <div class="d-flex align-items-center gap-3 border-bottom py-3">
+                    <div class="flex-grow-1">
+                        <div class="fw-medium">{{ item.product_name }}</div>
+                        <div class="text-muted small">Qty: {{ item.quantity }} × Rs. {{ "{:,}".format(item.price) }}</div>
+                    </div>
+                    <div class="fw-bold">Rs. {{ "{:,}".format(item.subtotal()) }}</div>
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+        <div class="col-lg-4">
+            <div class="bg-white rounded-4 p-4 shadow-sm mb-3">
+                <h6 class="fw-bold">Shipping Address</h6>
+                <p class="mb-1">{{ order.shipping_address }}</p>
+                <p class="mb-1">{{ order.city or '' }}</p>
+                <p class="mb-0">Phone: {{ order.phone }}</p>
+            </div>
+            <div class="bg-white rounded-4 p-4 shadow-sm">
+                <h6 class="fw-bold">Payment</h6>
+                <p class="mb-2">{{ order.payment_method }}</p>
+                <div class="d-flex justify-content-between fw-bold fs-5">
+                    <span>Total</span>
+                    <span>Rs. {{ "{:,}".format(order.total) }}</span>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

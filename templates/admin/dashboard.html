@@ -1,0 +1,70 @@
+{% extends "base.html" %}
+{% block title %}Admin Dashboard — Markaz{% endblock %}
+
+{% block content %}
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-md-2 admin-sidebar d-none d-md-block">
+            <div class="px-3 mb-3"><span class="logo text-white">Markaz<span>.</span></span></div>
+            <a href="{{ url_for('admin_dashboard') }}" class="active"><i class="fas fa-tachometer-alt me-2"></i> Dashboard</a>
+            <a href="{{ url_for('admin_products') }}"><i class="fas fa-box me-2"></i> Products</a>
+            <a href="{{ url_for('admin_orders') }}"><i class="fas fa-shopping-cart me-2"></i> Orders</a>
+            <a href="{{ url_for('home') }}"><i class="fas fa-store me-2"></i> View Store</a>
+            <a href="{{ url_for('logout') }}"><i class="fas fa-sign-out-alt me-2"></i> Logout</a>
+        </div>
+        <div class="col-md-10 py-4 px-4">
+            <h3 class="fw-bold mb-4">Admin Dashboard</h3>
+            <div class="row g-3 mb-4">
+                <div class="col-6 col-md-3">
+                    <div class="stat-card">
+                        <div class="text-muted small">Products</div>
+                        <div class="fs-3 fw-bold">{{ stats.products }}</div>
+                    </div>
+                </div>
+                <div class="col-6 col-md-3">
+                    <div class="stat-card">
+                        <div class="text-muted small">Orders</div>
+                        <div class="fs-3 fw-bold">{{ stats.orders }}</div>
+                    </div>
+                </div>
+                <div class="col-6 col-md-3">
+                    <div class="stat-card">
+                        <div class="text-muted small">Users</div>
+                        <div class="fs-3 fw-bold">{{ stats.users }}</div>
+                    </div>
+                </div>
+                <div class="col-6 col-md-3">
+                    <div class="stat-card">
+                        <div class="text-muted small">Revenue</div>
+                        <div class="fs-3 fw-bold">Rs. {{ "{:,}".format(stats.revenue) }}</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="bg-white rounded-4 p-4 shadow-sm">
+                <h5 class="fw-bold mb-3">Recent Orders {% if stats.pending %}<span class="badge bg-warning text-dark">{{ stats.pending }} Pending</span>{% endif %}</h5>
+                {% if recent_orders %}
+                <div class="table-responsive">
+                    <table class="table table-hover">
+                        <thead><tr><th>#</th><th>Customer</th><th>Total</th><th>Status</th><th>Date</th></tr></thead>
+                        <tbody>
+                            {% for o in recent_orders %}
+                            <tr>
+                                <td>#{{ o.id }}</td>
+                                <td>{{ o.user.name }}</td>
+                                <td>Rs. {{ "{:,}".format(o.total) }}</td>
+                                <td><span class="badge {% if o.status=='Pending' %}bg-warning text-dark{% elif o.status=='Delivered' %}bg-success{% else %}bg-info{% endif %}">{{ o.status }}</span></td>
+                                <td>{{ o.created_at.strftime('%d %b %Y') }}</td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+                {% else %}
+                <p class="text-muted">No orders yet.</p>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

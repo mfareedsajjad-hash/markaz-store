@@ -1,0 +1,80 @@
+{% extends "base.html" %}
+{% block title %}{{ product.name }} — Markaz{% endblock %}
+
+{% block content %}
+<div class="container py-4">
+    <nav aria-label="breadcrumb" class="mb-3">
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item"><a href="{{ url_for('home') }}">Home</a></li>
+            <li class="breadcrumb-item"><a href="{{ url_for('category_page', category_id=product.category_id) }}">{{ product.category.name }}</a></li>
+            <li class="breadcrumb-item active">{{ product.name[:40] }}</li>
+        </ol>
+    </nav>
+
+    <div class="row g-4">
+        <div class="col-md-5">
+            <div class="bg-white rounded-4 p-3 shadow-sm">
+                <img src="{{ product.image }}" alt="{{ product.name }}" class="img-fluid rounded-3 w-100" style="max-height:420px;object-fit:cover;">
+            </div>
+        </div>
+        <div class="col-md-7">
+            <div class="bg-white rounded-4 p-4 shadow-sm h-100">
+                {% if product.badge %}<span class="badge bg-danger mb-2">{{ product.badge }}</span>{% endif %}
+                <h1 class="fs-3 fw-bold mb-2">{{ product.name }}</h1>
+                <div class="d-flex align-items-center gap-2 mb-3">
+                    <div class="text-warning">
+                        {% for i in range(5) %}
+                            {% if i < product.rating|int %}<i class="fas fa-star"></i>
+                            {% elif i < product.rating %}<i class="fas fa-star-half-alt"></i>
+                            {% else %}<i class="far fa-star"></i>{% endif %}
+                        {% endfor %}
+                    </div>
+                    <span class="text-muted small">{{ product.rating }} rating</span>
+                    <span class="text-muted small">• Stock: {{ product.stock }}</span>
+                </div>
+
+                <div class="mb-3">
+                    <span class="fs-2 fw-bold">Rs. {{ "{:,}".format(product.price) }}</span>
+                    {% if product.old_price %}
+                    <span class="text-muted text-decoration-line-through ms-2 fs-5">Rs. {{ "{:,}".format(product.old_price) }}</span>
+                    <span class="badge bg-success ms-2">{{ product.discount_percent() }}% OFF</span>
+                    {% endif %}
+                </div>
+
+                <p class="text-muted mb-4">{{ product.description or "High quality product available with Cash on Delivery across Pakistan." }}</p>
+
+                <div class="d-flex flex-wrap gap-2 mb-4">
+                    {% if current_user.is_authenticated %}
+                    <a href="{{ url_for('add_to_cart', product_id=product.id) }}" class="btn btn-lg px-5 rounded-pill btn-primary-custom">
+                        <i class="fas fa-shopping-bag me-2"></i> Add to Cart
+                    </a>
+                    {% else %}
+                    <a href="{{ url_for('login') }}" class="btn btn-lg px-5 rounded-pill btn-primary-custom">
+                        <i class="fas fa-sign-in-alt me-2"></i> Login to Buy
+                    </a>
+                    {% endif %}
+                </div>
+
+                <div class="border-top pt-3">
+                    <div class="row g-3 text-center">
+                        <div class="col-4"><i class="fas fa-truck text-success mb-1"></i><div class="small fw-medium">Fast Delivery</div></div>
+                        <div class="col-4"><i class="fas fa-undo text-primary mb-1"></i><div class="small fw-medium">7 Day Returns</div></div>
+                        <div class="col-4"><i class="fas fa-shield-alt text-warning mb-1"></i><div class="small fw-medium">Buyer Protect</div></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    {% if related %}
+    <div class="mt-5">
+        <div class="section-title">Related Products</div>
+        <div class="row g-3">
+            {% for p in related %}
+            <div class="col-6 col-md-3">{% include 'partials/product_card.html' %}</div>
+            {% endfor %}
+        </div>
+    </div>
+    {% endif %}
+</div>
+{% endblock %}
